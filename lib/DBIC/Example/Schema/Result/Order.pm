@@ -1,11 +1,12 @@
 package DBIC::Example::Schema::Result::Order;
 
-use DBIx::Class::Candy -autotable => v1,
-                    -components => [qw/
-                        Helper::Row::ToJSON
-                        InflateColumn::DateTime
-                        TimeStamp
-                        /];
+use DBIx::Class::Candy  -autotable => v1,
+                        -components =>
+                            [qw/
+                                Helper::Row::ToJSON
+                                InflateColumn::DateTime
+                                TimeStamp
+                            /];
 
 primary_column id => {
     data_type => 'int',
