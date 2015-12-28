@@ -1,7 +1,5 @@
 package DBIC::Example::Schema;
 
-our $VERSION = '1';
-
 use Moo;
 use namespace::autoclean;
 
