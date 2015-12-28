@@ -16,40 +16,52 @@ ok my $order = Order->create({
     type => 'basic',
     items => [
         {
-            amount => 10,
+            per_item => 10,
+            quantity => 1,
+            vat => 0.2,
             type => 'simple',
             name => 'Pencil',
         },
         {
-            amount => 40,
+            per_item => 40,
+            quantity => 1,
+            vat => 0.2,
             type => 'simple',
             name => 'Pen',
         }
     ],
 });
-ok my $order = Order->create({
+ok my $order2 = Order->create({
     name => 'O0002',
     type => 'basic',
     items => [
         {
-            amount => 1,
+            per_item => 1,
             name => 'Cabbages',
+            quantity => 1,
+            vat => 0,
             type => 'simple',
         },
         {
-            amount => 1,
+            per_item => 1,
             name => 'Lettuce',
+            quantity => 1,
+            vat => 0,
             type => 'simple',
         },
         {
-            amount => 1,
+            per_item => 1,
             name => 'Kohlrabi',
             type => 'simple',
+            quantity => 1,
+            vat => 0.2,
         },
         {
-            amount => 4,
+            per_item => 4,
             name => 'Carrots',
             type => 'simple',
+            quantity => 1,
+            vat => 0,
         }
     ],
 });
@@ -80,19 +92,23 @@ subtest subselect => sub {
             total => { '>' => 10 }
         },
         {
-            '+columns' => ['total', 'lines']
+            '+columns' => ['total', 'lines', 'items', 'total_exvat']
         }
     )->all;
     my @json = map { { %{$_->TO_JSON},
         total => $_->get_column('total'),
+        total_exvat => $_->get_column('total_exvat'),
         lines => $_->get_column('lines'),
+        items => $_->get_column('items'),
     } } @orders;
     eq_or_diff \@json, [
         {
             'name' => 'O0001',
             'id' => 1,
             'lines' => '2',
-            'total' => '50',
+            'total' => '60.0',
+            'total_exvat' => 50,
+            items => 2,
         }
     ];
 
@@ -114,40 +130,52 @@ subtest prefetch => sub {
     eq_or_diff [map {$_->TO_JSON} @lines],
     [
         {
-            amount => '10',
+            per_item => '10',
             id => 1,
             name => 'Pencil',
-            order_id => 1
+            order_id => 1,
+            vat => 0.2,
+            quantity => 1,
         },
         {
-            amount => '40',
+            per_item => '40',
             id => 2,
             name => 'Pen',
-            order_id => 1
+            order_id => 1,
+            vat => 0.2,
+            quantity => 1,
         },
         {
-            amount => '1',
+            per_item => '1',
             id => 3,
             name => 'Cabbages',
-            order_id => 2
+            order_id => 2,
+            quantity => 1,
+            vat => 0,
         },
         {
-            amount => '1',
+            per_item => '1',
             id => 4,
             name => 'Lettuce',
-            order_id => 2
+            order_id => 2,
+            quantity => 1,
+            vat => 0,
         },
         {
-            amount => '1',
+            per_item => '1',
             id => 5,
             name => 'Kohlrabi',
-            order_id => 2
+            order_id => 2,
+            quantity => 1,
+            vat => 0.2,
         },
         {
-            amount => '4',
+            per_item => '4',
             id => 6,
             name => 'Carrots',
-            order_id => 2
+            order_id => 2,
+            quantity => 1,
+            vat => 0,
         }
     ];
 

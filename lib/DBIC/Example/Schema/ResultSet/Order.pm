@@ -30,8 +30,10 @@ sub totals
         '+columns' => [
             # NOTE: fully qualified name
             # even though they are not ambiguous.
-            { total => \'sum(items.amount) as total' },
-            { lines => \'count(items.amount) as lines' },
+            { items => { sum => 'items.quantity', -as => 'items' }},
+            { lines => { count => 'items.quantity', -as => 'lines' }},
+            { total => \'sum(items.quantity*items.per_item*(1+items.vat)) as total' },
+            { total_exvat => \'sum(items.quantity*items.per_item) as total_exvat' },
         ],
         group_by => [map {"$me.$_"} @columns],
     });

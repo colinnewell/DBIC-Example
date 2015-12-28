@@ -27,7 +27,17 @@ column type => {
     is_nullable => 0,
 };
 
-column amount => {
+column per_item => {
+    data_type => 'numeric',
+    is_nullable => 0,
+};
+
+column quantity => {
+    data_type => 'numeric',
+    is_nullable => 0,
+};
+
+column vat => {
     data_type => 'numeric',
     is_nullable => 0,
 };
