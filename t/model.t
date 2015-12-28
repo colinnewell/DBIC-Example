@@ -91,10 +91,7 @@ subtest subselect => sub {
     my @orders = Order->totals->as_subselect_rs->search({
             total => { '>' => 10 }
         },
-        {
-            '+columns' => ['total', 'lines', 'items', 'total_exvat']
-        }
-    )->all;
+    )->total_columns->all;
     my @json = map { { %{$_->TO_JSON},
         total => $_->get_column('total'),
         total_exvat => $_->get_column('total_exvat'),

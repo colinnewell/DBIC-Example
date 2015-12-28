@@ -47,4 +47,14 @@ sub prefetch_items
     });
 }
 
+sub total_columns
+{
+    my $self = shift;
+    return $self->search(undef,
+        {
+            '+columns' => ['total', 'lines', 'items', 'total_exvat']
+        }
+    );
+}
+
 1;
