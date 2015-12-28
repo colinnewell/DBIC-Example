@@ -37,5 +37,12 @@ sub totals
     });
 }
 
+sub prefetch_items
+{
+    my $self = shift;
+    return $self->search(undef, {
+        prefetch => 'items',
+    });
+}
 
 1;
