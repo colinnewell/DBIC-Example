@@ -179,4 +179,19 @@ subtest prefetch => sub {
     done_testing;
 };
 
+subtest bug => sub {
+    my $orders = Order;
+    my @columns = $orders->result_source->columns;
+    my $me = $orders->current_source_alias;
+    my @o = $orders->search(undef, {
+        join => ['items'],
+        '+columns' => [
+            { total => \'sum(items.quantity*items.per_item*(1+items.vat)) as total' },
+            #{ total => \'sum(quantity*per_item*(1+vat)) as total' },
+        ],
+        group_by => [map {"$me.$_"} @columns],
+    });
+    is scalar @o, 2;
+};
+
 done_testing;
