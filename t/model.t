@@ -114,7 +114,7 @@ subtest subselect => sub {
 
 subtest prefetch => sub {
 
-    my @orders = Order->prefetch_items->all;
+    my @orders = Order->prefetch_items->name_order->all;
     eq_or_diff [map {$_->TO_JSON} @orders], [
         {id => 1, name => 'O0001'},
         {id => 2, name => 'O0002'},

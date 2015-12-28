@@ -1,6 +1,6 @@
+requires "DBIx::Class" => "0";
 requires "DBIx::Class::Candy" => "0";
-requires "DBIx::Class::ResultSet" => "0";
-requires "DBIx::Class::Schema" => "0";
+requires "DBIx::Class::Helpers" => "0";
 requires "Moo" => "0";
 requires "base" => "0";
 requires "namespace::autoclean" => "0";
@@ -17,6 +17,7 @@ on 'test' => sub {
   requires "Test::Most" => "0";
   requires "blib" => "1.01";
   requires "perl" => "5.006";
+  requires "SQL::Translator" => 0;
 };
 
 on 'test' => sub {

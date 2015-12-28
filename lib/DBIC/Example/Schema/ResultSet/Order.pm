@@ -24,7 +24,6 @@ sub totals
 {
     my $self = shift;
     my @columns = $self->result_source->columns;
-    my $me = $self->current_source_alias;
     return $self->search(undef, {
         join => ['items'],
         '+columns' => [
@@ -35,7 +34,7 @@ sub totals
             { total => \'sum(items.quantity*items.per_item*(1+items.vat)) as total' },
             { total_exvat => \'sum(items.quantity*items.per_item) as total_exvat' },
         ],
-        group_by => [map {"$me.$_"} @columns],
+        group_by => $self->_qualify_names(@columns),
     });
 }
 
@@ -55,6 +54,26 @@ sub total_columns
             '+columns' => ['total', 'lines', 'items', 'total_exvat']
         }
     );
+}
+
+sub _qualify_names
+{
+    my $self = shift;
+    my @columns = shift;
+    my $me = $self->current_source_alias;
+    return [map {"$me.$_"} @columns];
+}
+
+sub name_order
+{
+    my $self = shift;
+    my $me = $self->current_source_alias;
+    return $self->search(undef,
+        {
+            order_by => [
+                { -asc => $self->_qualify_names(qw/name id/) }
+            ],
+        });
 }
 
 1;
